@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import Footer from "@/components/common/footer";
 import { Header } from "@/components/common/header";
 import { db } from "@/db";
 import { orderTable } from "@/db/schema";
@@ -13,11 +14,13 @@ const MyOrdersPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user.id) {
-    redirect("/login");
+  
+  if (!session?.user) {
+    redirect("/authentication");
   }
+  
   const orders = await db.query.orderTable.findMany({
-    where: eq(orderTable.userId, session?.user.id),
+    where: eq(orderTable.userId, session.user.id),
     with: {
       items: {
         with: {
@@ -29,29 +32,38 @@ const MyOrdersPage = async () => {
         },
       },
     },
+    orderBy: (orderTable, { desc }) => [desc(orderTable.createdAt)],
   });
 
   return (
     <>
       <Header />
-      <div className="px-5">
-        <Orders
-          orders={orders.map((order) => ({
-            id: order.id,
-            totalPriceInCents: order.totalPriceInCents,
-            status: order.status,
-            createdAt: order.createdAt,
-            items: order.items.map((item) => ({
-              id: item.id,
-              imageUrl: item.productVariant.imageUrl,
-              productName: item.productVariant.product.name,
-              productVariantName: item.productVariant.name,
-              priceInCents: item.productVariant.priceInCents,
-              quantity: item.quantity,
-            })),
-          }))}
-        />
-      </div>
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-8">Meus Pedidos</h1>
+        {orders.length > 0 ? (
+          <Orders
+            orders={orders.map((order) => ({
+              id: order.id,
+              totalPriceInCents: order.totalPriceInCents,
+              status: order.status,
+              createdAt: order.createdAt,
+              items: order.items.map((item) => ({
+                id: item.id,
+                imageUrl: item.productVariant.imageUrl,
+                productName: item.productVariant.product.name,
+                productVariantName: item.productVariant.name,
+                priceInCents: item.productVariant.priceInCents,
+                quantity: item.quantity,
+              })),
+            }))}
+          />
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">Você ainda não fez nenhum pedido.</p>
+          </div>
+        )}
+      </main>
+      <Footer />
     </>
   );
 };

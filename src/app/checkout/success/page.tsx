@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Orders from "@/app/my-orders/components/orders";
 import { Header } from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,9 +33,9 @@ const CheckoutSuccessPage = () => {
           </DialogDescription>
 
           <DialogFooter>
-           <Button className="rounded-full" size="lg" asChild>
-            <Link href="/my-orders">Ver meus pedidos</Link>
-          </Button>
+            <Button className="rounded-full" size="lg">
+              <Link href="/my-orders">Ver meus pedidos</Link>
+            </Button>
             <Button
               className="rounded-full"
               variant="outline"

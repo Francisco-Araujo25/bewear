@@ -18,7 +18,7 @@ const QuantitySelector = () => {
 
     return <div className="space-y-4">
         <h3 className="font-medium">Quantidade</h3>
-        <div className="flex items-center w-[100px] border justify-between rounded-lg">
+        <div className="flex items-center w-25 border justify-between rounded-lg">
             <Button size="icon" variant="ghost" onClick={handleDecrement}>
                 <MinusIcon />
             </Button>

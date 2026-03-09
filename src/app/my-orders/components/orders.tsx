@@ -33,84 +33,99 @@ interface OrdersProps {
 
 const Orders = ({ orders }: OrdersProps) => {
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {orders.map((order) => (
         <Card key={order.id}>
-          <CardContent>
-            <Accordion type="single" collapsible key={order.id}>
-              <AccordionItem value="item-1">
-                <AccordionTrigger>
-                  <div className="flex flex-col gap-1">
-                    {order.status === "paid" && <Badge>Pago</Badge>}
-                    {order.status === "pending" && (
-                      <Badge variant="outline">Pagamento pendente</Badge>
-                    )}
-                    {order.status === "canceled" && (
-                      <Badge variant="destructive">Cancelado</Badge>
-                    )}
-                    <p>
-                      Pedido feito em{" "}
-                      {new Date(order.createdAt).toLocaleDateString("pt-BR")} às{" "}
-                      {new Date(order.createdAt).toLocaleTimeString("pt-BR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
+          <CardContent className="p-0">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="order-details">
+                <AccordionTrigger className="px-6 hover:no-underline">
+                  <div className="flex flex-col gap-2 text-left w-full pr-4">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-3">
+                        {order.status === "paid" && (
+                          <Badge className="bg-green-600">Pago</Badge>
+                        )}
+                        {order.status === "pending" && (
+                          <Badge variant="outline" className="text-orange-600">Pagamento pendente</Badge>
+                        )}
+                        {order.status === "canceled" && (
+                          <Badge variant="destructive">Cancelado</Badge>
+                        )}
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(order.createdAt).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Pedido #{order.id.slice(0, 8)}</span>
+                      <span className="font-semibold">{formatCentsToBRL(order.totalPriceInCents)}</span>
+                    </div>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  {order.items.map((product) => (
-                    <div
-                      className="flex items-center justify-between"
-                      key={product.id}
-                    >
-                      <div className="flex items-center gap-4">
-                        <Image
-                          src={product.imageUrl}
-                          alt={product.productName}
-                          width={78}
-                          height={78}
-                          className="rounded-lg"
-                        />
-                        <div className="flex flex-col gap-1">
-                          <p className="text-sm font-semibold">
-                            {product.productName}
-                          </p>
-                          <p className="text-muted-foreground text-xs font-medium">
-                            {product.productVariantName} x {product.quantity}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end justify-center gap-2">
-                        <p className="text-sm font-bold">
-                          {formatCentsToBRL(
-                            product.priceInCents * product.quantity,
-                          )}
-                        </p>
+                  <div className="px-6 pb-6 space-y-6">
+                    {/* Order Items */}
+                    <div className="space-y-4">
+                      <h4 className="font-medium">Itens do Pedido</h4>
+                      <div className="space-y-4">
+                        {order.items.map((product) => (
+                          <div
+                            className="flex gap-4 items-start"
+                            key={product.id}
+                          >
+                            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
+                              <Image
+                                src={product.imageUrl}
+                                alt={product.productName}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-1 flex-col justify-between min-w-0">
+                              <div>
+                                <p className="font-medium truncate">{product.productName}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {product.productVariantName}
+                                </p>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">
+                                  Qtd: {product.quantity}
+                                </span>
+                                <span className="font-semibold">
+                                  {formatCentsToBRL(
+                                    product.priceInCents * product.quantity,
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                  <div className="py-5">
+                    
                     <Separator />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <p className="text-sm">Subtotal</p>
-                      <p className="text-muted-foreground text-sm font-medium">
-                        {formatCentsToBRL(order.totalPriceInCents)}
-                      </p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="text-sm">Frete</p>
-                      <p className="text-muted-foreground text-sm font-medium">
-                        GRÁTIS
-                      </p>
-                    </div>
-                    <div className="flex justify-between">
-                      <p className="text-sm">Total</p>
-                      <p className="text-sm font-semibold">
-                        {formatCentsToBRL(order.totalPriceInCents)}
-                      </p>
+                    
+                    {/* Order Summary */}
+                    <div className="space-y-2 max-w-xs ml-auto">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal</span>
+                        <span>{formatCentsToBRL(order.totalPriceInCents)}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Frete</span>
+                        <span className="text-green-600">GRÁTIS</span>
+                      </div>
+                      <Separator />
+                      <div className="flex justify-between font-semibold">
+                        <span>Total</span>
+                        <span>{formatCentsToBRL(order.totalPriceInCents)}</span>
+                      </div>
                     </div>
                   </div>
                 </AccordionContent>
@@ -124,3 +139,4 @@ const Orders = ({ orders }: OrdersProps) => {
 };
 
 export default Orders;
+

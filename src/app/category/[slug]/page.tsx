@@ -27,20 +27,31 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   return (
     <>
       <Header />
-      <div className="space-y-6 px-5">
-        <h2 className="text-xl font-semibold">{category.name}</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {products.map((product) => (
-            <ProductItem
-              key={product.id}
-              product={product}
-              textContainerClassName="max-w-full"
-            />
-          ))}
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">{category.name}</h1>
+          <p className="text-muted-foreground mt-2">
+            {products.length} {products.length === 1 ? 'produto' : 'produtos'}
+          </p>
         </div>
-      </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {products.map((product) => (
+              <ProductItem
+                key={product.id}
+                product={product}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Nenhum produto encontrado nesta categoria.</p>
+          </div>
+        )}
+      </main>
     </>
   );
 };
 
 export default CategoryPage;
+

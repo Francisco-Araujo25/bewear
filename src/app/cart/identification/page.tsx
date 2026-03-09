@@ -44,31 +44,39 @@ const IdentificationPage = async () => {
     0,
   );
   return (
-    <div>
+    <>
       <Header />
-      <div className="space-y-4 px-5">
-        <Addresses
-          shippingAddresses={shippingAddresses}
-          defaultShippingAddressId={cart.shippingAddress?.id || null}
-        />
-        <CartSummary
-          subtotalInCents={cartTotalInCents}
-          totalInCents={cartTotalInCents}
-          products={cart.items.map((item) => ({
-            id: item.productVariant.id,
-            name: item.productVariant.product.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
-      </div>
-      <div className="mt-12">
-        <Footer />
-      </div>
-    </div>
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-8">Finalizar Compra</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <Addresses
+              shippingAddresses={shippingAddresses}
+              defaultShippingAddressId={cart.shippingAddress?.id || null}
+            />
+          </div>
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <CartSummary
+                subtotalInCents={cartTotalInCents}
+                totalInCents={cartTotalInCents}
+                products={cart.items.map((item) => ({
+                  id: item.productVariant.id,
+                  name: item.productVariant.product.name,
+                  variantName: item.productVariant.name,
+                  quantity: item.quantity,
+                  priceInCents: item.productVariant.priceInCents,
+                  imageUrl: item.productVariant.imageUrl,
+                }))}
+              />
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 };
 
 export default IdentificationPage;
+
