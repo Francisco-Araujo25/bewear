@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 import { db } from ".";
 import { categoryTable, productTable, productVariantTable } from "./schema";
 
@@ -547,28 +545,28 @@ async function main() {
     await db.delete(categoryTable);
     console.log("✅ Dados limpos com sucesso!");
 
-    // Inserir categorias primeiro
+    // Inserir categorias e guardar os IDs retornados pelo banco
     const categoryMap = new Map<string, string>();
 
     console.log("📂 Criando categorias...");
     for (const categoryData of categories) {
-      const categoryId = crypto.randomUUID();
       const categorySlug = generateSlug(categoryData.name);
 
       console.log(`  📁 Criando categoria: ${categoryData.name}`);
 
-      await db.insert(categoryTable).values({
-        id: categoryId,
-        name: categoryData.name,
-        slug: categorySlug,
-      });
+      const [inserted] = await db
+        .insert(categoryTable)
+        .values({
+          name: categoryData.name,
+          slug: categorySlug,
+        })
+        .returning();
 
-      categoryMap.set(categoryData.name, categoryId);
+      categoryMap.set(categoryData.name, inserted.id);
     }
 
     // Inserir produtos
     for (const productData of products) {
-      const productId = crypto.randomUUID();
       const productSlug = generateSlug(productData.name);
       const categoryId = categoryMap.get(productData.categoryName);
 
@@ -580,17 +578,18 @@ async function main() {
 
       console.log(`📦 Criando produto: ${productData.name}`);
 
-      await db.insert(productTable).values({
-        id: productId,
-        name: productData.name,
-        slug: productSlug,
-        description: productData.description,
-        categoryId: categoryId,
-      });
+      const [insertedProduct] = await db
+        .insert(productTable)
+        .values({
+          name: productData.name,
+          slug: productSlug,
+          description: productData.description,
+          categoryId: categoryId,
+        })
+        .returning();
 
       // Inserir variantes do produto
       for (const variantData of productData.variants) {
-        const variantId = crypto.randomUUID();
         const productKey = productData.name as keyof typeof productImages;
         const variantImages =
           productImages[productKey]?.[
@@ -600,14 +599,12 @@ async function main() {
         console.log(`  🎨 Criando variante: ${variantData.color}`);
 
         await db.insert(productVariantTable).values({
-          id: variantId,
           name: variantData.color,
-          productId: productId,
+          productId: insertedProduct.id,
           color: variantData.color,
           imageUrl: variantImages[0] || "",
           priceInCents: variantData.price,
           slug: generateSlug(`${productData.name}-${variantData.color}`),
-          stock: 10,
         });
       }
     }

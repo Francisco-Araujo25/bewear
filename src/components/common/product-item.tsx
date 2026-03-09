@@ -23,7 +23,6 @@ interface ProductItemProps {
     variants: (typeof productVariantTable.$inferSelect)[];
   };
   textContainerClassName?: string;
-  desktopCatalog?: boolean;
 }
 
 // ─── Auth Gate Dialog ─────────────────────────────────────────────────────────
@@ -76,7 +75,6 @@ const AuthGateDialog = ({
 const ProductItem = ({
   product,
   textContainerClassName,
-  desktopCatalog,
 }: ProductItemProps) => {
   const { data: session } = authClient.useSession();
   const [authOpen, setAuthOpen] = useState(false);
