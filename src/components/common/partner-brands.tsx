@@ -1,7 +1,3 @@
-import Image from "next/image";
-
-import poloLogo from "@/components/common/logo-polo/Polo Ralph Lauren Black 1.png";
-
 const BRANDS = [
   {
     name: "Nike",
@@ -106,7 +102,7 @@ const PartnerBrands = () => (
       {/* Mobile: horizontal scroll */}
       <div className="flex gap-3 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden md:hidden">
         {BRANDS.map((brand) => (
-          <div key={brand.name} className="flex flex-col items-center gap-1.5 shrink-0 w-[110px]">
+          <div key={brand.name} className="flex flex-col items-center gap-1.5 shrink-0 w-27.5">
             {brand.logo}
             <span className="text-[11px] font-medium text-muted-foreground">
               {brand.name}

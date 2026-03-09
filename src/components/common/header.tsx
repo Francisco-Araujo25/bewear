@@ -59,7 +59,7 @@ export const Header = () => {
                   {session.user.name?.split(" ")?.[1]?.[0]}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xs font-medium text-muted-foreground hidden md:block truncate max-w-[100px]">
+              <span className="text-xs font-medium text-muted-foreground hidden md:block truncate max-w-25">
                 Olá, {session.user.name?.split(" ")?.[0]}!
               </span>
             </div>
@@ -133,7 +133,7 @@ export const Header = () => {
                       </Avatar>
                       <div>
                         <p className="text-sm font-semibold leading-tight">{session.user.name}</p>
-                        <p className="text-xs text-muted-foreground truncate max-w-[160px]">
+                        <p className="text-xs text-muted-foreground truncate max-w-40">
                           {session.user.email}
                         </p>
                       </div>

@@ -45,7 +45,7 @@ const AuthGateDialog = ({
           <DialogTitle className="text-xl font-bold">
             Criar uma conta
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground leading-relaxed text-center max-w-[260px] mx-auto">
+          <DialogDescription className="text-sm text-muted-foreground leading-relaxed text-center max-w-65 mx-auto">
             Conecte-se à BEWEAR e aproveite uma experiência feita pra quem se
             veste com personalidade.
           </DialogDescription>
